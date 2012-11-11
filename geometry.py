@@ -1,7 +1,11 @@
-NI = 3
-NJ = 3
-NK = 3
+import itertools
+
+NI = 4
+NJ = 4
+NK = 4
 dimensions=3
+
+FULLCUBE = frozenset(itertools.product(xrange(NI),xrange(NJ),xrange(NK)))
 
 #======translations=======
 def bbox(pointset):
@@ -17,7 +21,7 @@ def translate(pointset, tr_vector):
 	def vector_add(v):
 		return tuple(tr_vector[dim] + v[dim] for dim in xrange(dimensions))
 
-	return set(vector_add(point) for point in pointset)
+	return frozenset(vector_add(point) for point in pointset)
 
 def translations(canonical_piece):
 	bi,bj,bk = bbox(canonical_piece)
@@ -100,8 +104,15 @@ for xr in x_rotations:
 			all_rotations.add( mtuple( mmul( mmul(xr,yr), zr) ))
 
 def rotations(canonical_piece):
+	'''Returns the set of all rotations of the piece within the cube.
+		The cardinality of the set depends on the piece simmetry. 1..24
+	'''
+	rotationset = set()
+
 	for rm in all_rotations:
-		yield set( vmul(rm, point) for point in canonical_piece )
+		rotationset.add( frozenset( vmul(rm, point) for point in canonical_piece ) )
+
+	return rotationset
 
 def main():
 	z = [0,0,0]
@@ -111,8 +122,8 @@ def main():
 	for r in [z,a,b]:
 		print r
 		print 'x', vmul(rotx, r)	
-		print 'y',vmul(roty, r)
-		print 'z',vmul(rotz, r)
+		print 'y', vmul(roty, r)
+		print 'z', vmul(rotz, r)
 		print
 	
 	print 'len s4', len(all_rotations)
