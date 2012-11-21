@@ -18,19 +18,10 @@ xx.. .... .... ....
 """
 ]
 
-def memoize(obj):
-    cache = obj.cache = {}
- 
-    @functools.wraps(obj)
-    def memoizer(*args, **kwargs):
-        if args not in cache:
-            cache[args] = obj(*args, **kwargs)
-        return cache[args]
-    return memoizer
-
 pieces = [read_pointset(pstr) for pstr in pieces]
 
-@memoize
+CONFIGS = []
+
 def all_configurations(ps):    
     ret = set()    
     for r in rotations(ps):
@@ -45,34 +36,46 @@ def describe_piece_simmetry(piece_str):
     print 'rotations', len(rotations(ps))    
     print 'all_configurations', len(all_configurations(ps))
 
-def is_goal(state):
+def compute_score(state):
     if len(state) < len(pieces):
-        return False
+        return -1
     
-    union = set()
-    
-    for pieceid in state:
-        union.update(pieces[pieceid])
+    config_pieces = [set(CONFIGS[pieceid][configid]) for pieceid, configid in enumerate(state)]
 
-    return union == FULLCUBE
+    if set.union(*config_pieces) == FULLCUBE:        
+        return 1
+    elif set.intersection(*config_pieces) != set():
+        print "A"        
+    else:
+        return 0
 
 def sucessors(s):
+    s = s[:]
     pieceid = len(s)    
     if pieceid == len(pieces):
         return [] # no more sucessors
     else:
-        return all_configurations(pieces[pieceid])    
+        return [s + [i] for i in xrange(len(CONFIGS[pieceid]))]
 
 def search(state):
     for s in sucessors(state):
-        if is_goal(s):
+        score = compute_score(s)
+        if score == 1: #win
             yield s
+        elif score == -1 : #overlap no possible solution
+            continue            
         else:
             for s in search(s):
                 yield s 
 
 def main():
-    #describe_piece_simmetry(pieces[0])
+    #describe_piece_simmetry(pieces[0])    
+    print "precompute all piece configurations"
+    global CONFIGS
+    CONFIGS = [list(all_configurations(p)) for p in pieces]
+    
+    #print sucessors ([0,1])
+    #print score([1,1,3])
     for s in search([]):
         print s
         
