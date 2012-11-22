@@ -1,20 +1,24 @@
 import geometry
+from geometry import NI,NJ,NK
 
 def read_pointset(s):
-	s=s.strip()
+	s = [c for c in s.lower() if c in "xX."]
 	pointset=set()
-	for j, sik in enumerate(s.split('\n')):		
-		for k , si in enumerate(sik.split(' ')):
-			for i, v in enumerate(si):
+
+	for j in xrange(NJ):
+		for k in xrange(NK):
+			for i in xrange(NI):
+				v = s[i+k*NI+j*NI*NK]
 				if v == 'x':
-					pointset.add((i,2-j,k))	
+					pointset.add((i,NJ-1-j,k))	
+
 	return frozenset(pointset)
 	
-def print_pointset(pointset):
-	for j in xrange(geometry.NJ):
-		for k in xrange(geometry.NK):
-			for i in xrange(geometry.NI):
-				if (i,geometry.NJ-1-j,k) in pointset:
+def print_pointset(pointset,c='x'):
+	for j in xrange(NJ):
+		for k in xrange(NK):
+			for i in xrange(NI):
+				if (i,NJ-1-j,k) in pointset:
 					print 'x',
 				else:
 					print '.',
