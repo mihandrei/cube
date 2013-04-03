@@ -9,41 +9,88 @@
         <script src="math.js"></script>
         <script src="s4/s4.js"></script>
         <script src="geo.js"></script>
+        <script src="piece_reader.js"></script>
+        <script src="solver.js"></script>
 
         <script>
-            function animate_configs(p){
-                var pieces = Geo.configurations(p);
+            var COLORS = [0xaa3333, 0xaaaa33, 0x3333aa, 0x33aaaa, 0x307AEB, 0xEB7330];
+
+            function animate_pieces(pieces, secs){
+                secs = secs || 0.1;
                 for (var i = 0; i < pieces.length; i++) {
                     (function(i){
                         setTimeout(function() {
-                            View.display([View.piece(pieces[i], 0xffaa00)]);
-                        }, 100*i);
+                            View.display([View.piece(pieces[i], COLORS[i])]);
+                        }, secs*1000*i);
                     })(i);
                 }
             }
 
+        function read_pieces(){
+            // 'xxOO xOOO OcOO OOOO '+
+            // 'xOOO OcOO cccO OcOO '+
+            // 'aaOO OaOO OcOO OOOO '+
+            // 'OaaO OOOO OOOO OOOO ',
+
+            var test_pieces_str = [
+                '.... .... .... .... '+
+                '.... .... .... .... '+
+                'X... .... .... .... '+
+                'XX.. X... .... .... ',
+
+                '.... .... .... .... '+
+                '.... .... .... .... '+
+                'XX.. .X.. .... .... '+
+                '.XX. .... .... .... ',
+
+                '.... .... .... .... '+
+                '.... .X.. .... .... '+
+                '.X.. XXX. .X.. .... '+
+                '.... .X.. .... .... ',
+
+                '..XX .XXX X.XX XXXX '+
+                '.XXX X.XX ...X X.XX '+
+                '..XX X.XX X.XX XXXX '+
+                'X..X XXXX XXXX XXXX '
+            ]
+
+            var test_pieces = [];
+
+            for (var i = 0; i < test_pieces_str.length; i++) {
+                test_pieces.push(cube.read_piece(test_pieces_str[i]));
+                //document.write('<pre>'+cube.write_piece(test_pieces[i])+'</pre>');
+            }
+
+            return test_pieces;
+        }
+
+        function displ(pieces){
             View.init();
+            var ps = [];
 
-            p1 = [[0, 0, 0], [0, 1, 0], [1, 0, 0], [0, 0, 1]];
-            p2 = [[0, 1, 0], [1, 1, 0], [1, 1, 1], [2, 0, 0], [1, 0, 0]];
-            p3 = [[0, 1, 1],
-                  [1, 0, 1], [1, 1, 1], [1, 2, 1],
-                  [2, 1, 1],
-                  [1, 1, 2],
-                  [1, 1, 0]
-                  ];
+            for (var i = 0; i < pieces.length; i++) {
+                ps.push(View.piece(pieces[i], COLORS[i]));
+            }
 
+            View.display(ps);
+        }
 
-            ps = [
-                View.piece(p1, 0xff0000),
-                View.piece(p2, 0xffff00),
-                View.piece(p3, 0x0000ff)
-            ];
+        function show_solutions(){
+            var pieces = read_pieces();
 
+            function on_win(pieces){
+                for (var i = 0; i < pieces.length; i++) {
+                    document.write('<pre>'+cube.write_piece(pieces[i])+'</pre>');
+                }
+            }
 
-            //View.display(ps);
-            animate_configs(p2);
+            cube.solve(pieces, on_win);
 
+            // View.init();
+            // animate_pieces(pieces.slice(0,2), 3);
+        }
+
+        show_solutions();
 
         </script>
     </body>

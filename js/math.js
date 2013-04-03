@@ -17,6 +17,25 @@ var cube = cube || {};
         }
     }
 
+    function set_intersection(s1, s2, eq){
+        var ret = [];
+        for (var i = 0; i < s2.length; i++) {
+            if(set_in(s1, s2[i], eq)){
+                ret.push(s2[i]);
+            }
+        }
+        return ret;
+    }
+
+
+    function set_union(s1, s2, eq){
+        var ret = s1.slice();
+        for (var i = 0; i < s2.length; i++) {
+            set_add(ret, s2[i], eq);
+        }
+        return ret;
+    }
+
     //======some affine math
 
     function v3add(v1,v2){
@@ -57,6 +76,17 @@ var cube = cube || {};
         return true;
     }
 
+    function v_eq(a, b){
+        var nr = a.length;
+        if (nr !== b.length) return false;
+
+        for (var i = 0; i < nr; i++) {
+            if(a[i]!==b[i]){
+                return false;
+            }
+        }
+        return true;
+    }
 
     // different for mmul to avoid column vectors or transposes
     // also hides the homogenous coordonate
@@ -101,9 +131,12 @@ var cube = cube || {};
     cube.math = {
         set_add : set_add,
         set_in : set_in,
+        set_union : set_union,
+        set_intersection : set_intersection,
         //v3add : v3add,
         m4mul : m4mul,
         matrix_eq : matrix_eq,
+        v_eq:v_eq,
         vmul : vmul,
         bbox : bbox,
         translation_matrix:translation_matrix

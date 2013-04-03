@@ -14,9 +14,9 @@
 
 
 (function(){
-    NI = 4;
-    NJ = 4;
-    NK = 4;
+    var NI = 4,
+        NJ = 4,
+        NK = 4;
 
     function rotate_piece(points, matrix){
         var ret = [];
@@ -81,11 +81,19 @@
         for (var i = 0; i < piece_rotations.length; i++) {
             var trans_of_rot = translations(piece_rotations[i]);
             for (var j = 0; j < trans_of_rot.length; j++) {
+                //is this set necesary? can translations produce duplicates??
                 cube.math.set_add(retset, trans_of_rot[j], cube.math.matrix_eq);
             }
         }
         return retset;
     }
+
+    // def describe_piece_simmetry(ps):
+//     print_pointset(ps)
+//     print 'translations', len(list(translations(ps)))
+//     print 'rotations', len(rotations(ps))
+//     print 'all_configurations', len(all_configurations(ps))
+
 
     // function run_tests(){
     //     var bb = bbox([[0,1,0],[1,1,0]]);
@@ -93,7 +101,10 @@
     //     var transl = translations(piece);
     // }
 
-    Geo = {
+    cube.geo = {
+        NI : NI,
+        NJ : NJ,
+        NK : NK,
         translations:translations,
         rotations:rotations,
         configurations:configurations

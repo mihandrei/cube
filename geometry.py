@@ -122,6 +122,18 @@ def rotations(canonical_piece):
 
     return rotationset
 
+#BUG BUG!
+#rotated pieces are not in the 'canonical place aka
+#bbox in the origin!
+#adjust rotation matrices to translate or
+#change the translation logic
+# btw afine matrices could handle translation instead of the custom method here
+def all_configurations(ps):
+    ret = set()
+    for r in rotations(ps):
+        ret.update(translations(r))
+    return ret
+
 
 def main():
     z = [0, 0, 0]
@@ -137,5 +149,19 @@ def main():
 
     print 'len s4', len(all_rotations)
 
+
+def test_transformation():
+    canonical_p1 = [(0, 0, 0), (0, 1, 0), (1, 0, 0), (0, 0, 1)]
+    # print bbox(canonical_p1)
+    # print len(list(translations(canonical_p1)))
+    # print len(list(rotations(canonical_p1)))
+
+    canonical_p2 = [(0, 1, 0), (1, 1, 0), (1, 1, 1), (2, 0, 0), (1, 0, 0)]
+    # print bbox(canonical_p2)
+    # print len(list(translations(canonical_p2)))
+    # print len(list(rotations(canonical_p2)))
+
+    print len(list(all_configurations(canonical_p2)))
 if __name__ == '__main__':
-    main()
+    #main()
+    test_transformation()

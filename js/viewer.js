@@ -5,19 +5,19 @@
 
     function lights(scene){
         var lighta = new THREE.DirectionalLight(0xaaaaaa);
-        lighta.position.set(-0.5,-0.5,1);
+        lighta.position.set(0.5, 0.5, 5);
         scene.add(lighta);
 
-        var spotlight = new THREE.SpotLight(0xff0000);
-        spotlight.shadowCameraFov = 45;
+        var spotlight = new THREE.SpotLight(0xffaaaa);
+        // spotlight.shadowCameraFov = 45;
         //spotlight.castShadow = true;
-        spotlight.position.set(0, 5, 5);
+        spotlight.position.set(0, 4, 5);
         scene.add(spotlight);
 
-        var spotlight2 = new THREE.SpotLight(0xaa00ff);
-        spotlight2.shadowCameraFov = 45;
+        var spotlight2 = new THREE.SpotLight(0xffffaa);
+        // spotlight2.shadowCameraFov = 45;
         //spotlight2.castShadow = true;
-        spotlight2.position.set(5, 0, 5);
+        spotlight2.position.set(4, 0, 5);
         scene.add(spotlight2);
     }
 
@@ -43,7 +43,7 @@
 
         var camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 1000);
 
-        camera.position.set(6,6,6);
+        camera.position.set(4,0,6);
         //loot at considera asta vectorul up implicit e 0,1,0
         camera.up = new THREE.Vector3(0,0,1);
         camera.lookAt(new THREE.Vector3(0,0,0));
@@ -53,12 +53,12 @@
 
         function render(t) {
             requestAnimationFrame(render);
-            var circlex = 3 * Math.sin(t/15000);
-            var circley = 3 * Math.cos(t/15000);
+            var circlex = 4 * Math.sin(t/15000);
+            var circley = 4 * Math.cos(t/15000);
 
             camera.position.x =  circlex ;
             camera.position.y =  circley ;
-            camera.position.z = 6;
+            camera.position.z = 7;
             camera.lookAt(new THREE.Vector3(0, 0, 2));
 
             renderer.render(scene, camera);
@@ -87,7 +87,10 @@
 
 
     function piece(voxes, color){
-        var material = new THREE.MeshLambertMaterial({map: wireTexture, color: 0xffffff, emissive:color});
+        var material = new THREE.MeshLambertMaterial({map: wireTexture,
+                 color: color
+                 // emissive:color
+             });
 
         var cube = new THREE.Mesh(piece_geom(voxes), material);
         cube.position.set(-1.5,-1.5, 1);
