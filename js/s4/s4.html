@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <title>s4</title>
+    </head>
+    <body>
+        <script src="../math.js"></script>
+        <script src="compute_s4.js"></script>
+        <h1>the s4 rotation group</h1>
+        <script>
+            function print_matrix(m){
+                var txt = JSON.stringify(m);
+                document.write('<pre>'+txt+'</pre>');
+            }
+
+            var s4 = cube.S4();
+            for (var i = 0; i < s4.length; i++) {
+                print_matrix(s4[i]);
+            }
+        </script>
+    </body>
+</html>
