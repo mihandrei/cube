@@ -46,6 +46,17 @@
         return s;
     }
 
+    function read_pieces(pieces_str_list){
+        var pieces = [];
+
+        for (var i = 0; i < pieces_str_list.length; i++) {
+            pieces.push(cube.read_piece(pieces_str_list[i]));
+        }
+
+        return pieces;
+    }
+
     cube.read_piece = read_piece;
+    cube.read_pieces = read_pieces;
     cube.write_piece = write_piece;
 })();

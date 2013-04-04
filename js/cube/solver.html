@@ -1,0 +1,36 @@
+<html>
+    <head>
+        <title>solver</title>
+    </head>
+    <body>
+        <script src="math.js"></script>
+        <script src="s4/s4.js"></script>
+        <script src="geo.js"></script>
+        <script src="piece_reader.js"></script>
+        <script src="solver.js"></script>
+
+        <script src="problems.js"></script>
+
+        <script>
+            function write_pieces(pieces){
+                document.write('<pre>')
+                for (var i = 0; i < pieces.length; i++) {
+                    document.write(cube.write_piece(pieces[i]));
+                }
+                document.write('</pre><hr>');
+            }
+
+            document.write('<h1> problem</h1>');
+
+            var pieces = cube.problem2;
+            write_pieces(pieces);
+            document.write('<h1>solutions</h1>');
+
+            cube.solve(pieces, write_pieces);
+
+            document.write('<h1>done</h1>');
+
+
+        </script>
+    </body>
+</html>

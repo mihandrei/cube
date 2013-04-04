@@ -39,20 +39,19 @@
     function canonical(piece){
         var bb = cube.math.bbox(piece);
         var ret = translate_piece(piece, [-bb.xmin, -bb.ymin, -bb.zmin]);
-        ret.bbox_dimensions = [1 + bb.xmax - bb.xmin, 1 + bb.ymax - bb.ymin, 1 + bb.zmax - bb.zmin];
+        ret.bbox_dimensions = {dx : bb.dx, dy : bb.dy, dz : bb.dz};
         return ret;
     }
 
 
     function translations(piece){
         piece = canonical(piece);
-        var bb = piece.bbox_dimensions;
-        var bi = bb[0], bj = bb[1], bk = bb[2];
+        var bbd = piece.bbox_dimensions;
         var ret = [];
 
-        for (var di = 0; di < 1 + NI - bi; di++){
-            for (var dj = 0; dj < 1 + NJ - bj; dj++){
-                for (var dk = 0; dk < 1 + NK - bk; dk++){
+        for (var di = 0; di < 1 + NI - bbd.dx; di++){
+            for (var dj = 0; dj < 1 + NJ - bbd.dy; dj++){
+                for (var dk = 0; dk < 1 + NK - bbd.dz; dk++){
                     ret.push(translate_piece(piece, [di, dj, dk]));
                 }
             }

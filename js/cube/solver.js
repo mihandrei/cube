@@ -15,15 +15,30 @@
         return ret;
     }
 
+    function sort_by_bbox(pieces){
+        function compare(a, b){
+            var ba = cube.math.bbox(a);
+            var bb = cube.math.bbox(b);
+            return  bb.dx*bb.dy*bb.dz - ba.dx*ba.dy*ba.dz;
+        }
+        pieces.sort(compare);
+    }
+
     var FULLCUBE = fullcube();
     FULLCUBE.sort();
 
     cube.solve = function(pieces, on_win){
         var nevals = 0;
         var CONFIGS = [];
+        // sort pieces decreasing in volume of their bounding box
+        sort_by_bbox(pieces);
 
-        //compute all configs
-        for (var i = 0; i < pieces.length; i++) {
+        // do not generate rotations for first piece
+        // doing so leads to 27 solutions that are rotations of the same.
+        CONFIGS.push(cube.geo.translations(pieces[0]));
+
+        //compute all configs for the rest
+        for (var i = 1; i < pieces.length; i++) {
             CONFIGS.push(cube.geo.configurations(pieces[i]));
         }
 
@@ -95,7 +110,10 @@
             for (var i = 0; i < succ.length; i++) {
                 var score = evaluate(succ[i]);
                 if (score === 1) {
-                    on_win(state2pieces(succ[i]));
+                    var shouldcontinue = on_win(state2pieces(succ[i]));
+                    if (!shouldcontinue){
+                        return;
+                    }
                 } else if (score === -1) {
                     continue;
                 } else {

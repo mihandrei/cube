@@ -118,6 +118,10 @@ var cube = cube || {};
             bb.zmax = Math.max(p[2], bb.zmax);
         }
 
+        bb.dx = 1 + bb.xmax - bb.xmin;
+        bb.dy = 1 + bb.ymax - bb.ymin;
+        bb.dz = 1 + bb.zmax - bb.zmin;
+
         return bb;
     }
 
