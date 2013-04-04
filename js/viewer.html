@@ -33,25 +33,30 @@
             // 'OaaO OOOO OOOO OOOO ',
 
             var test_pieces_str = [
-                '.... .... .... .... '+
-                '.... .... .... .... '+
-                'X... .... .... .... '+
-                'XX.. X... .... .... ',
-
-                '.... .... .... .... '+
-                '.... .... .... .... '+
-                'XX.. .X.. .... .... '+
-                '.XX. .... .... .... ',
-
-                '.... .... .... .... '+
-                '.... .X.. .... .... '+
-                '.X.. XXX. .X.. .... '+
-                '.... .X.. .... .... ',
-
                 '..XX .XXX X.XX XXXX '+
                 '.XXX X.XX ...X X.XX '+
                 '..XX X.XX X.XX XXXX '+
-                'X..X XXXX XXXX XXXX '
+                'X..X XXXX XXXX XXXX ',
+
+                'XX.. X... .X.. .... '+
+                'X... .X.. XXX. .X.. '+
+                'XX.. .X.. .X.. .... '+
+                '.XX. .... .... .... ',
+
+                // '.... .... .... .... '+
+                // '.... .X.. .... .... '+
+                // '.X.. XXX. .X.. .... '+
+                // '.... .X.. .... .... ',
+
+                // '.... .... .... .... '+
+                // '.... .... .... .... '+
+                // 'X... .... .... .... '+
+                // 'XX.. X... .... .... ',
+
+                // '.... .... .... .... '+
+                // '.... .... .... .... '+
+                // 'XX.. .X.. .... .... '+
+                // '.XX. .... .... .... '
             ]
 
             var test_pieces = [];
@@ -79,9 +84,11 @@
             var pieces = read_pieces();
 
             function on_win(pieces){
+                document.write('<pre>')
                 for (var i = 0; i < pieces.length; i++) {
-                    document.write('<pre>'+cube.write_piece(pieces[i])+'</pre>');
+                    document.write(cube.write_piece(pieces[i]));
                 }
+                document.write('</pre><hr>');
             }
 
             cube.solve(pieces, on_win);

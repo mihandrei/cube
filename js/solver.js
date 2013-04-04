@@ -16,6 +16,7 @@
     }
 
     var FULLCUBE = fullcube();
+    FULLCUBE.sort();
 
     cube.solve = function(pieces, on_win){
         var nevals = 0;
@@ -68,14 +69,17 @@
             var config_pieces = state2pieces(state);
 
             for (var i = 0; i < config_pieces.length; i++) {
-                var config_piece = pieces[i];
+                var config_piece = config_pieces[i];
 
-                if (cube.math.set_intersection(union, config_piece, cube.math.matrix_eq) !== []) {
+                var intersection = cube.math.set_intersection(union, config_piece, cube.math.v_eq);
+                if ( ! cube.math.v_eq(intersection, [])) {
                     return -1;
                 } else{
-                    union = cube.math.set_union(union, config_piece, cube.math.matrix_eq);
+                    union = cube.math.set_union(union, config_piece, cube.math.v_eq);
                 }
             }
+
+            union.sort();
 
             if (cube.math.matrix_eq(union, FULLCUBE)) {
                 return 1;
@@ -91,7 +95,7 @@
             for (var i = 0; i < succ.length; i++) {
                 var score = evaluate(succ[i]);
                 if (score === 1) {
-                    on_win(state2pieces(state));
+                    on_win(state2pieces(succ[i]));
                 } else if (score === -1) {
                     continue;
                 } else {
@@ -101,6 +105,9 @@
         }
 
         search([]);
+
+        console.log(nevals);
+        console.log(CONFIGS);
     };
 
 })();
