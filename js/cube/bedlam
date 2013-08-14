@@ -1,0 +1,57 @@
+?Mentine si versiunea in pyhton cu urmatoarea strategie de debug:
+logheaza un .html care sa afiseze in viewerul threejs
+
+bedlam
+12 piese
+fara bbox mare
+
+400 mutari/piesa
+
+400**12 stari
+IOI!
+
+solutia e numai la adancimea 12
+-> depth first search
+
+tre limitat cumva branching factorul
++ ceva euristica
+
+idei:
+
+
+
+
+
+//imperative: faster but more complex
+//root tiling computation is not required to be fast
+
+// function min(v, cmp){
+//     var m = v[0];
+//     for (var i = 0; i < v.length; i++) {
+//         if( cmp(v[i], m) < 0){
+//             m = v[i];
+//         }
+//     }
+//     return m;
+// }
+
+// //assuming following fill order: ox oy oz
+// function root_tiling(points){
+//     function cmp(a, b){
+//         if(a[2] < b[2]){
+//             return -1;
+//         }else if(a[2] == b[2]){
+//             if(a[1] < b[1]){
+//                 return -1;
+//             }else if(a[1] == b[1]){
+//                 if (a[0] < b[0]) {
+//                     return -1;
+//                 }
+//             }
+//         }
+//         return 1;
+//     }
+
+
+//     return min(points, cmp);
+// }

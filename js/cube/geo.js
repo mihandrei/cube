@@ -10,24 +10,16 @@
   pt o piesa rot:24 trans:64
 
   mult de configuratii e mare todo think
+
+  "idiomatic in js/tampitomatic" e sa transform cheia intr-un string unic
 */
 
-
 (function(){
-    var NI = 4,
-        NJ = 4,
-        NK = 4;
-
     function rotate_piece(points, matrix){
-        var ret = [];
-        for (var i = 0; i < points.length; i++) {
-            var point = points[i];
-            ret.push(cube.math.vmul(matrix, point));
-        }
-        //it will sort the vectors as strings
-        //since NI NJ NK < 10 this is sane
-        ret.sort();
-        return ret;
+        //it will sort the vectors as strings since NI NJ NK < 10 this is sane
+        return points.map(function(point){
+            return cube.math.vmul(matrix, point);
+        }).sort();
     }
 
 
@@ -44,14 +36,14 @@
     }
 
 
-    function translations(piece){
+    function translations(piece, box){
         piece = canonical(piece);
         var bbd = piece.bbox_dimensions;
         var ret = [];
 
-        for (var di = 0; di < 1 + NI - bbd.dx; di++){
-            for (var dj = 0; dj < 1 + NJ - bbd.dy; dj++){
-                for (var dk = 0; dk < 1 + NK - bbd.dz; dk++){
+        for (var dk = 0; dk < 1 + box.NK - bbd.dz; dk++){
+            for (var dj = 0; dj < 1 + box.NJ - bbd.dy; dj++){
+                for (var di = 0; di < 1 + box.NI - bbd.dx; di++){
                     ret.push(translate_piece(piece, [di, dj, dk]));
                 }
             }
@@ -73,12 +65,13 @@
         return rotationset;
     }
 
-    function configurations(piece){
+    function configurations(piece, box){
         var retset = [];
         var piece_rotations = rotations(piece);
 
+        //set(translations(pr) for pr in rotations(piece))
         for (var i = 0; i < piece_rotations.length; i++) {
-            var trans_of_rot = translations(piece_rotations[i]);
+            var trans_of_rot = translations(piece_rotations[i], box);
             for (var j = 0; j < trans_of_rot.length; j++) {
                 //is this set necesary? can translations produce duplicates??
                 cube.math.set_add(retset, trans_of_rot[j], cube.math.matrix_eq);
@@ -101,12 +94,14 @@
     // }
 
     cube.geo = {
-        NI : NI,
-        NJ : NJ,
-        NK : NK,
         translations:translations,
+        canonical:canonical,
         rotations:rotations,
-        configurations:configurations
+        configurations:configurations,
+        priv:{
+            rotate_piece:rotate_piece,
+            translate_piece:translate_piece
+        }
     };
 
 }());

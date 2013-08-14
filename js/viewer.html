@@ -1,7 +1,19 @@
 <html>
     <head>
         <title>viewer</title>
-        <style>canvas { width: 100%; height: 100% }</style>
+        <style>
+            body{
+                margin:0;
+                padding:0;
+                background-color: #333333;
+                color:#fff;
+            }
+            canvas { width: 100%; height: 100% }
+            #left{
+                position: fixed;
+                top:0;
+            }
+        </style>
     </head>
     <body>
         <script src="cube/math.js"></script>
@@ -20,13 +32,21 @@
             var COLORS = [0xaa3333, 0xaaaa33, 0xee7733, 0x33aaaa, 0x307AEB, 0xEB7330];
 
             function main(){
-                var pieces = cube.problem2;
+                var pieces = cube.problem_bedlam;
                 var solution;
                 var check_state=[];
 
+                function display(pieces){
+                    var ps = [];
+                    for (var i = 0; i < pieces.length; i++) {
+                        ps.push(View.piece(pieces[i], COLORS[i]));
+                    }
+
+                    View.display(ps);
+                }
+
                 function on_changed(){
                     var ps = [];
-
                     for (var i = 0; i < pieces.length; i++) {
                         if(check_state[i]){
                             ps.push(View.piece(pieces[i], COLORS[i]));
@@ -57,12 +77,26 @@
                     return false; //stop the search
                 }
 
-                View.init();
-
+                View.init(pieces.box);
                 checkboxes();
+                var resumable_search_step = cube.make_solver(pieces).resumable_search_step;
+
+                var stack = [[]];
+
+                function capusa(){
+                    var res = resumable_search_step(stack);
+                    if(res.score === -1){
+                        setTimeout(capusa,200);
+                    }
+
+                    display(res.config);
+                    // if(stack.length !== 0){
+                        //setTimeout(capusa, 200);
+                    // }
+                }
 
                 $('#solve').click(function(){
-                    cube.solve(pieces, on_win);
+                    capusa();
                 });
             }
 
@@ -74,7 +108,7 @@
         </script>
 
         <div id="left">
-            <button id="solve">solve</button>
+            <button id="solve">step</button>
         </div>
 
     </body>

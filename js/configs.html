@@ -1,0 +1,77 @@
+<html>
+    <head>
+        <title>viewer</title>
+        <style>
+            body{
+                margin:0;
+                padding:0;
+                background-color: #333333;
+                color:#fff;
+            }
+            canvas { width: 100%; height: 100% }
+            #left{
+                position: fixed;
+                top:0;
+            }
+        </style>
+    </head>
+    <body>
+        <script src="cube/math.js"></script>
+        <script src="cube/s4/s4.js"></script>
+        <script src="cube/geo.js"></script>
+        <script src="cube/piece_reader.js"></script>
+        <script src="cube/solver.js"></script>
+
+        <script src="cube/problems.js"></script>
+
+        <script src="three.min.js"></script>
+        <script src="viewer.js"></script>
+        <script src="jquery.js"></script>
+
+        <script>
+            var COLORS = [0xaa3333, 0xaaaa33, 0xee7733, 0x33aaaa, 0x307AEB, 0xEB7330,0xcafeaa];
+
+            function main(){
+                var pieces = cube.problem_bedlam;
+                var anim_cancel_tok;
+
+                function on_click(i){
+                    var piece = pieces[i];
+                    var color = COLORS[i];
+                    var configs = cube.geo.configurations(piece, pieces.box);
+
+                    clearTimeout(anim_cancel_tok);
+
+                    function anim_step(i){
+                        View.display([View.piece(configs[i], color)]);
+                        if(i < configs.length){
+                            anim_cancel_tok = setTimeout(anim_step, 100, i + 1);
+                        }
+                    }
+                    anim_cancel_tok = setTimeout(anim_step, 1, 0);
+                }
+
+                function btns(){
+                    for (var i = 0; i < pieces.length; i++) {
+                        (function(i){
+                            var domel = $('<button>'+i+'</button>').click(function(){
+                                on_click(i);
+                            });
+
+                            $('#left').append(domel);
+                        })(i);
+                    }
+                }
+
+                View.init(pieces.box, 60);
+                btns();
+            }
+
+            $(document).ready(function(){
+                main();
+            });
+        </script>
+
+        <div id="left"> </div>
+    </body>
+</html>

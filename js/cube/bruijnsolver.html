@@ -7,7 +7,7 @@
         <script src="s4/s4.js"></script>
         <script src="geo.js"></script>
         <script src="piece_reader.js"></script>
-        <script src="solver.js"></script>
+        <script src="bruijn.js"></script>
 
         <script src="problems.js"></script>
 
@@ -26,7 +26,7 @@
             write_pieces(problem);
             document.write('<h1>solutions</h1>');
 
-            cube.simple_solver(problem).search(write_pieces);
+            cube.bruijn_solver(problem).search(write_pieces);
 
             document.write('<h1>done</h1>');
 

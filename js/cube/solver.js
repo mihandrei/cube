@@ -1,13 +1,9 @@
 (function() {
-    var NI = cube.geo.NI,
-        NJ = cube.geo.NJ,
-        NK = cube.geo.NK;
-
-    function fullcube(){
+    function fullcube(box){
         var ret = [];
-        for (var i = 0; i < NI ; i++){
-            for (var j = 0; j < NJ ; j++){
-                for (var k = 0; k < NK; k++){
+        for (var i = 0; i < box.NI ; i++){
+            for (var j = 0; j < box.NJ ; j++){
+                for (var k = 0; k < box.NK; k++){
                     ret.push([i, j, k]);
                 }
             }
@@ -24,22 +20,23 @@
         pieces.sort(compare);
     }
 
-    var FULLCUBE = fullcube();
-    FULLCUBE.sort();
 
-    cube.solve = function(pieces, on_win){
+    cube.simple_solver = function(pieces){
         var nevals = 0;
+        var FULLCUBE = fullcube(pieces.box);
+        FULLCUBE.sort();
+
         var CONFIGS = [];
         // sort pieces decreasing in volume of their bounding box
         sort_by_bbox(pieces);
 
         // do not generate rotations for first piece
         // doing so leads to 27 solutions that are rotations of the same.
-        CONFIGS.push(cube.geo.translations(pieces[0]));
+        CONFIGS.push(cube.geo.translations(pieces[0], pieces.box));
 
         //compute all configs for the rest
         for (var i = 1; i < pieces.length; i++) {
-            CONFIGS.push(cube.geo.configurations(pieces[i]));
+            CONFIGS.push(cube.geo.configurations(pieces[i], pieces.box));
         }
 
 
@@ -105,27 +102,34 @@
         }
 
 
-        function search(state){
-            var succ = successors(state);
-            for (var i = 0; i < succ.length; i++) {
-                var score = evaluate(succ[i]);
-                if (score === 1) {
-                    var shouldcontinue = on_win(state2pieces(succ[i]));
-                    if (!shouldcontinue){
+        function search(on_win){
+            var stack = [[]];
+            while(stack.length !== 0){
+                var res = resumable_search_step(stack);
+                if (res.score === 1){
+                    if(!on_win(res.config)){
                         return;
                     }
-                } else if (score === -1) {
-                    continue;
-                } else {
-                    search(succ[i]);
                 }
             }
         }
 
-        search([]);
+        function resumable_search_step(stack){
+            var state = stack.pop();
+            var score = evaluate(state);
+            var config = state2pieces(state);
 
-        console.log(nevals);
-        console.log(CONFIGS);
+            if (score === 0) {
+                var succ = successors(state).reverse();
+                stack.push.apply(stack, succ);
+            }
+
+            return {score:score, config:config};
+        }
+
+        return {search:search,
+                resumable_search_step:resumable_search_step
+            };
     };
 
 })();

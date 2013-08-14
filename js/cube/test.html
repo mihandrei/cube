@@ -1,0 +1,60 @@
+<html>
+    <head>
+        <title>solver</title>
+        <style type="text/css">
+            .p{color:green;}
+            .f{color:red;}
+        </style>
+    </head>
+    <body>
+        <script src="math.js"></script>
+        <script src="s4/s4.js"></script>
+        <script src="geo.js"></script>
+        <script src="piece_reader.js"></script>
+        <script src="solver.js"></script>
+
+        <script src="problems.js"></script>
+
+        <script>
+            function assert_eq(a, b){
+                if (a !== b){
+                    throw {l:a, r:b, msg: a+ '!=\n'+b};
+                }
+            }
+
+            tests = {
+                test_read_write_piece : function(){
+                    var v = cube.write_piece(cube.problem_soma[6], {NI:3,NJ:3,NK:3});
+                    assert_eq(v, "... ... ... \nX.. ... ... \nXX. X.. ... \n\n");
+                },
+
+                test_rotate: function(){
+                    var v = cube.write_piece(
+                                cube.geo.canonical(
+                                    cube.geo.priv.rotate_piece(cube.problem_soma[6], cube.math.s4[2]))
+                                , {NI:3,NJ:3,NK:3});
+
+                    assert_eq(v, "... ... ... \nXX. .X. ... \n.X. ... ... \n\n");
+
+                },
+
+                // test_f:function(){
+                //     assert_eq(1,2);
+                // }
+
+            }
+
+
+            for(var t in tests){
+                try{
+                    tests[t].call();
+                    document.write('<p class="p"> passed ' + t + '</p>');
+                }
+                catch(e){
+                    document.write('<p class="f"> failed ' + t + '</p>');
+                    document.write('<pre>' + (e.msg||e) + '</pre>');
+                }
+            }
+        </script>
+    </body>
+</html>
